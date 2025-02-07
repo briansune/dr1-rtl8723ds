@@ -1076,6 +1076,30 @@ void rtw_hal_dump_macaddr(void *sel, _adapter *adapter)
 #endif
 }
 
+/**
+ * rtw_hal_set_hw_macaddr() - Set HW MAC address
+ * @adapter:	struct PADAPTER
+ * @mac_addr:   6-bytes mac address
+ *
+ * Set Wifi Mac address by writing to the relative HW registers,
+ *
+ */
+void rtw_hal_set_hw_macaddr(PADAPTER adapter, u8 *mac_addr)
+{
+	rtw_ps_deny(adapter, PS_DENY_IOCTL);
+	LeaveAllPowerSaveModeDirect(adapter);
+
+#ifdef CONFIG_MI_WITH_MBSSID_CAM
+	rtw_hal_change_macaddr_mbid(adapter, mac_addr);
+#else
+	rtw_hal_set_hwreg(adapter, HW_VAR_MAC_ADDR, mac_addr);
+#endif
+#ifdef CONFIG_RTW_DEBUG
+	rtw_hal_dump_macaddr(RTW_DBGDUMP, adapter);
+#endif
+	rtw_ps_deny_cancel(adapter, PS_DENY_IOCTL);
+}
+
 #ifdef RTW_HALMAC
 void rtw_hal_hw_port_enable(_adapter *adapter)
 {

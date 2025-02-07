@@ -33,6 +33,9 @@ ifeq ($(GCC_VER_49),1)
 EXTRA_CFLAGS += -Wno-date-time	# Fix compile error && warning on gcc 4.9 and later
 endif
 
+src := $(PWD)
+prj_dir := /home/tg5/dr1_6p6/sources/linux
+
 EXTRA_CFLAGS += -I$(src)/include
 
 EXTRA_LDFLAGS += --strip-debug
@@ -67,7 +70,7 @@ CONFIG_GSPI_HCI = n
 CONFIG_AP_MODE = y
 CONFIG_P2P = y
 CONFIG_MP_INCLUDED = y
-CONFIG_POWER_SAVING = y
+CONFIG_POWER_SAVING = n
 CONFIG_IPS_MODE = default
 CONFIG_LPS_MODE = default
 CONFIG_USB_AUTOSUSPEND = n
@@ -148,7 +151,7 @@ CONFIG_LAYER2_ROAMING = y
 #bit0: ROAM_ON_EXPIRED, #bit1: ROAM_ON_RESUME, #bit2: ROAM_ACTIVE
 CONFIG_ROAMING_FLAG = 0x3
 ###################### Platform Related #######################
-CONFIG_PLATFORM_I386_PC = y
+CONFIG_PLATFORM_I386_PC = n
 CONFIG_PLATFORM_ANDROID_X86 = n
 CONFIG_PLATFORM_ANDROID_INTEL_X86 = n
 CONFIG_PLATFORM_JB_X86 = n
@@ -210,6 +213,7 @@ CONFIG_PLATFORM_NV_TK1_UBUNTU = n
 CONFIG_PLATFORM_RTL8197D = n
 CONFIG_PLATFORM_AML_S905 = n
 CONFIG_PLATFORM_ZTE_ZX296716 = n
+CONFIG_PLATFORM_DR1 = y
 ########### CUSTOMER ################################
 CONFIG_CUSTOMER_HUAWEI_GENERAL = n
 
@@ -2303,6 +2307,25 @@ CONFIG_RTL8822BS ?= m
 USER_MODULE_NAME := 8822bs
 endif
 endif
+
+endif
+
+ifeq ($(CONFIG_PLATFORM_DR1), y)
+
+#EXTRA_CFLAGS += -DCONFIG_RTW_RANDOM_MAC
+#EXTRA_CFLAGS += -DCONFIG_RTW_MAC_B4=0x12 -DCONFIG_RTW_MAC_B5=0x34
+
+EXTRA_CFLAGS += -DCONFIG_LITTLE_ENDIAN
+#EXTRA_CFLAGS += -DCONFIG_CONCURRENT_MODE
+EXTRA_CFLAGS += -DCONFIG_IOCTL_CFG80211 -DRTW_USE_CFG80211_STA_EVENT
+
+KSRC ?= $(prj_dir)
+
+$(info src="$(src)")
+$(info prj="$(prj_dir)")
+$(info CROSS_COMPILE="$(CROSS_COMPILE)")
+$(info ARCH="$(ARCH)")
+$(info KSRC="$(KSRC)")
 
 endif
 
